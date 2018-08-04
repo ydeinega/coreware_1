@@ -16,11 +16,14 @@ LIB = ./libft/libft.a
 
 HEADERS = ./verbosity/verbosity.h \
 corewar.h \
-op.h
+op.h \
+visu.h
 
 FLAGS = -Wall -Wextra -Werror
 
 VERB_PATH = ./verbosity/
+
+VISU_PATH = ./visu/
 
 VERB_SRCS = \
 verb_del.c \
@@ -30,6 +33,11 @@ verb_pc_move.c \
 verb_print.c \
 verb_mode.c \
 verb_comment_print.c
+
+VISU_SRCS = \
+draw.c \
+visual_init.c \
+ft_itoa_base_mod.c
 
 VERB = $(addprefix $(VERB_PATH), $(VERB_SRCS))
 
@@ -55,21 +63,24 @@ extract_arg.c \
 store_value.c \
 print_for_debug.c \
 
+VISU = $(addprefix $(VISU_PATH), $(VISU_SRCS))
 
 OBJS = $(SRCS:.c=.o)
 
 VERB_OBJS = $(VERB_SRCS:.c=.o)
 
+VISU_OBJS = $(VISU_SRCS:.c=.o)
+
 cor:
 	@rm -rf $(NAME)
 	@make -C libft
-	@gcc $(SRCS) $(VERB) $(FLAGS) -I $(HEADERS) -c
-	@gcc $(OBJS) $(VERB_OBJS) $(LIB) -o $(NAME)
+	@gcc $(SRCS) $(VERB) $(VISU) $(FLAGS) -I $(HEADERS) -c
+	@gcc $(OBJS) $(VERB_OBJS) $(VISU_OBJS) $(LIB) -o $(NAME)
 	@echo "\x1b[35mYour PROGRAM has been successfully created!\x1b[0m"
 
 clean:
 	@make -C libft clean
-	@rm -rf $(OBJS)
+	@rm -rf $(OBJS) $(VERB_OBJS) $(VISU_OBJS)
 	@echo "\x1b[36mObject files have been deleted!\x1b[0m"
 
 fclean: clean

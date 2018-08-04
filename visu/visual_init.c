@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "visual.h"
+#include "visu.h"
 
 static WINDOW	*win_create(void)
 {

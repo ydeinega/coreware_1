@@ -37,6 +37,7 @@ typedef struct			s_process
 	bool				live;
 	int					lives_ctd;
 	int					pc;
+	int					prev;//ADD
 	int					cycles_not_live;
 	int					opcode;
 	int					cycles_to_exec;
@@ -91,6 +92,8 @@ typedef	struct			s_parse
 	int					nbr_cycles;
 	int					nbr_cycles_visu;
 	int					number_v;
+	WINDOW				*win;
+	t_change			*change;//ADD
 }						t_parse;
 
 typedef	struct 			s_op
@@ -107,6 +110,7 @@ typedef	struct 			s_op
 }						t_op;
 
 # include "./verbosity/verbosity.h"
+# include "./visu/visu.h"
 
 typedef	void			(*funcptr)(t_process *process, unsigned int *arg, t_arg_type *arg_type);
 t_parse					g_game;
