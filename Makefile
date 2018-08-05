@@ -17,7 +17,7 @@ LIB = ./libft/libft.a
 HEADERS = ./verbosity/verbosity.h \
 corewar.h \
 op.h \
-visu.h
+./visu/visu.h
 
 FLAGS = -Wall -Wextra -Werror
 
@@ -74,8 +74,8 @@ VISU_OBJS = $(VISU_SRCS:.c=.o)
 cor:
 	@rm -rf $(NAME)
 	@make -C libft
-	@gcc $(SRCS) $(VERB) $(VISU) $(FLAGS) -I $(HEADERS) -c
-	@gcc $(OBJS) $(VERB_OBJS) $(VISU_OBJS) $(LIB) -o $(NAME)
+	@gcc $(SRCS) $(VERB) $(VISU) $(FLAGS) -I $(HEADERS) -c 
+	@gcc $(OBJS) $(VERB_OBJS) $(VISU_OBJS) $(LIB) -o $(NAME) -lncurses
 	@echo "\x1b[35mYour PROGRAM has been successfully created!\x1b[0m"
 
 clean:

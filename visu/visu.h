@@ -14,8 +14,9 @@
 # define VISU_H
 
 # define MAP_SIZE 64 * 64
-# include <ncurses.h>
+# include "../corewar.h"
 
+void			draw_map(WINDOW *win);
 void			draw_all(WINDOW *win);
 WINDOW			*visual_init(void);
 char			*ft_itoa_base_mod(intmax_t nb, int base, int flag);

@@ -2,7 +2,10 @@
 
 void	run_game(void)
 {
-	if (g_game.v)
+	//здесь нужно разрулить ситуацию с флагами
+	if (g_game.visu)
+		draw_map(g_game.win)
+	else if (g_game.v)
 		initialize_verb();//comment
 	while (g_game.end != true && g_game.ctd > 0)
 	{
@@ -13,11 +16,13 @@ void	run_game(void)
 		run_processes();
 		if (g_game.ctd_cur == g_game.ctd)
 			make_check();
+		if (g_game.visu)
+			draw_all(g_game.win);
 		//g_game.v && g_game.number_v ? verb_mode(g_game.number_v) : 0;//comment!!!!!!!!!!!!!!!!!
 	}
 	if ((!g_game.v && !g_game.dump && !g_game.visu) ||
 		(g_game.v && !g_game.number_v))
-		verb_mode(0);
+		verb_mode(0);//здесь как-то назвать функцию типа принт резалт
 }
 
 void	make_check(void)

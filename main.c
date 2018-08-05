@@ -33,6 +33,8 @@ void	initialize_game(void)
 	g_game.nbr_cycles = 0;
 	g_game.nbr_cycles_visu = 0;
 	g_game.number_v = 0;
+	win = NULL;
+	g_game.change = NULL;
 }
 
 int		main(int argc, char **argv)

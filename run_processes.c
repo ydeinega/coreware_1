@@ -125,15 +125,14 @@ bool	arg_valid(t_arg_type *arg_type, unsigned int *arg, int arg_num)
 
 void	read_next_instruct(t_process *proc, int move, int base)
 {
-	int 			pc_prev;
 	unsigned int	code;
 
-	pc_prev = proc->pc;
+	proc->prev = proc->pc;
 	proc->pc = (proc->pc + move) % base;
 	code = conv_hex(&g_game.board[proc->pc], 1);
 	if (g_game.v && proc->opcode >= 1 &&
 		proc->opcode <= 16 && proc->opcode != 9)//comment
-		verb_print_pc(pc_prev, proc->pc, move, g_game.board);
+		verb_print_pc(proc->prev, proc->pc, move, g_game.board);
 	if (code >= 1 && code <= 16)
 	{
 		proc->opcode = code;
@@ -141,9 +140,4 @@ void	read_next_instruct(t_process *proc, int move, int base)
 	}
 	else
 		proc->opcode = 0;
-
-	//ЗДЕСЬ НЕТ ЭЛСА
-	//ЗАПИСЬ В ВЕРБ
-	
 }
-

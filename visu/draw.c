@@ -17,10 +17,10 @@ static void		check_color(int pos, t_player *players, WINDOW *win)
 	int			i;
 	int			st;
 	int			len;
-	int			fd;
+	//int			fd;
 
 	i = -1;
-	fd = open("test.txt", O_RDWR | O_CREAT | O_APPEND);
+	//fd = open("test.txt", O_RDWR | O_CREAT | O_APPEND);
 	while (++i < g_game.players)
 	{
 		st = players[i].start;
@@ -65,8 +65,11 @@ static void			draw_procs(WINDOW *win)
 	map = g_game.board;
 	while (curr)
 	{
-		wattroff(win, A_REVERSE | A_BLINK);
-		write_value(curr->player, map[curr->prev], curr->prev, win);
+		if (curr->prev >= 0)
+		{
+			wattroff(win, A_REVERSE | A_BLINK);
+			write_value(curr->player, map[curr->prev], curr->prev, win);
+		}
 		wattron(win, A_REVERSE | A_BLINK);
 		write_value(curr->player, map[curr->pc], curr->pc, win);
 		wattroff(win, A_REVERSE | A_BLINK);
@@ -74,13 +77,15 @@ static void			draw_procs(WINDOW *win)
 	}
 }
 
-static void			draw_map(WINDOW *win)
+void				draw_map(WINDOW *win)
 {
-	int			i;
-	char		*buff;
+	int				i;
+	char			*buff;//unsigned char ???
+	unsigned char	*map;
 
 	i = -1;
 	buff = NULL;
+	map = g_game.board;
 	mvwprintw(win, 0, 0, "\n ");
 	while (++i < MEM_SIZE)
 	{
@@ -98,17 +103,25 @@ static void				draw_changes(WINDOW *win)
 	t_change		*curr;
 	t_change		*prev;
 	unsigned char	*map;
+	int				i;
 
 	map = g_game.board;
+	i = -1;
 	if (g_game.change == NULL || !(curr = g_game.change))
 		return ;
 	while ((prev = curr))
 	{
-		write_value(curr->player, curr->value, curr->pos, win);
+		while (++i < curr->len)
+		{
+			write_value(curr->player, curr->value[i], curr->pos, win);
+			curr->pos = (curr->pos + i) % MEM_SIZE;
+		}
 		curr = curr->next;
+		free(prev->value);
 		free(prev);
+		i = -1;
 	}
-	*changes = NULL;
+	g_game.change = NULL;
 }
 
 void				draw_all(WINDOW *win)

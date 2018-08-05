@@ -33,6 +33,7 @@ t_process	*new_process(t_player *player, t_process *proc, int pc)
 	new->live = 1;
 	new->lives_ctd = 0;
 	new->pc = pc;
+	new->prev = -1;//или 0
 	new->cycles_not_live = 0;
 	new->opcode = conv_hex(&g_game.board[pc], 1);
 	new->cycles_to_exec = op_tab[new->opcode - 1].cycles_to_exec;

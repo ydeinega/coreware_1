@@ -18,14 +18,16 @@
 # include <fcntl.h>
 # include "op.h"
 # include "./libft/libft.h"
+# include <ncurses.h>
 // # include "./verbosity/verbosity.h"
 # define HEX "0123456789abcdef"
 
 typedef struct			s_change
 {
 	int					player;
-	unsigned char		value;
+	unsigned char		*value;
 	unsigned int		pos;
+	int					len;
 	struct s_change		*next;
 }						t_change;
 
@@ -37,7 +39,7 @@ typedef struct			s_process
 	bool				live;
 	int					lives_ctd;
 	int					pc;
-	int					prev;//ADD
+	int					prev;//ADD//если размножение каретки, что делать???
 	int					cycles_not_live;
 	int					opcode;
 	int					cycles_to_exec;

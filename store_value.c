@@ -13,7 +13,31 @@
 // 	return (n);
 // }
 
-void	store_value(t_process *proc, unsigned int value, int delta, int base)
+static void		add_to_change(t_change *new)
+{
+	if (new)
+	{
+		new->next = g_game.change;
+		g_game.change = new;
+	}
+}
+
+static t_change	*new_change(int player, unsigned char *str, int len, int index)
+{
+	t_change	*new;
+
+	new = (t_change *)malloc(sizeof(t_change));
+	if (!new)
+		return (NULL);
+	new->next = NULL;
+	new->value = str;
+	new->len = len;
+	new->pos = index;
+	new->player = player;
+	return (new);
+}
+
+void			store_value(t_process *proc, unsigned int value, int delta, int base)
 {
 	int				index;
 	unsigned char	*str;
@@ -24,6 +48,10 @@ void	store_value(t_process *proc, unsigned int value, int delta, int base)
 	str = to_hex_str(value);
 	len = 4;
 	index = (proc->pc + (delta % base)) % MEM_SIZE;//???
+	if (g_game.visu && g_game.change)
+		add_to_change(new_change(proc->player, str, len, index))
+	else if (g_game.visu)
+		g_game.change = new_change(proc->player, str, len, index);
 	while (i < len)
 	{
 		g_game.board[index] = str[i];
