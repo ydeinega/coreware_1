@@ -4,7 +4,7 @@ void	run_game(void)
 {
 	//здесь нужно разрулить ситуацию с флагами
 	if (g_game.visu)
-		draw_map(g_game.win)
+		draw_map(g_game.win);
 	else if (g_game.v)
 		initialize_verb();//comment
 	while (g_game.end != true && g_game.ctd > 0)

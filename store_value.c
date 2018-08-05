@@ -49,7 +49,7 @@ void			store_value(t_process *proc, unsigned int value, int delta, int base)
 	len = 4;
 	index = (proc->pc + (delta % base)) % MEM_SIZE;//???
 	if (g_game.visu && g_game.change)
-		add_to_change(new_change(proc->player, str, len, index))
+		add_to_change(new_change(proc->player, str, len, index));
 	else if (g_game.visu)
 		g_game.change = new_change(proc->player, str, len, index);
 	while (i < len)
