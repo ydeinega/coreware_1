@@ -4,7 +4,7 @@ void	exec_and(t_process *process, unsigned int *arg, t_arg_type *arg_type)
 {
 	int		res;
 
-	ft_printf("I'm here!\n");
+	//ft_printf("I'm here!\n");
 	res = arg_fin(process, arg[0], arg_type[0]) & arg_fin(process, arg[1], arg_type[1]);
 	process->reg[arg[2] - 1] = res;
 	if (res == 0)

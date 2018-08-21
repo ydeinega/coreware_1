@@ -37,47 +37,102 @@ void		verb_print_ctd(int ctd)
 
 void		verb_print_cycles(int cycle)
 {
-//	ft_printf("5 SEGFOLT?\n");
 	if ((2 & g_game.number_v) > 0)
 		ft_printf("It is now cycle %i\n", cycle);
 	// if ((g_verb.ctd_change))
 	// 	ft_printf("Cycle to die is now %i\n", g_verb.ctd);
 }
 
+void		verb_prt_op_comm(t_process *proc, unsigned int *arg)	
+{
+	       // | -> store to 391 + 1 = 392 (with pc and mod 392)
+	unsigned int		delta;
+	unsigned int		new_pc;
+
+	ft_printf("\n");
+	delta = arg[1] + arg[2];
+	new_pc = proc->pc + delta;
+	ft_printf("%8| -> store to %i + %i = %i (with pc and mod %i)", arg[1], arg[2], delta, new_pc);
+}
+
+void				verb_prt_op_arg(t_process *proc, t_arg_type *arg_type, unsigned int *arg)
+{
+	t_op 			op;
+	int 			i;
+
+	i = -1;
+	op = op_tab[proc->opcode - 1];	
+	while (++i < op.arg_num)
+	{
+		ft_printf(" ");
+		if (arg_type[i] == T_REG)
+		{
+			if (op.arg[i] == T_REG)
+			{
+				ft_printf("r");
+				ft_printf("%i", arg[i]);
+			}
+			else
+				ft_printf("%i", (int)(arg_fin(proc, arg[i], arg_type[i]))); // fix arg_fin becouse of it return unsign. int
+		}
+		else
+		{
+			if (arg_type[i] == T_IND)	
+				ft_printf("%hi", (short)arg[i]);
+			else
+				ft_printf("%i", arg[i]);
+		}
+	}
+	// unsigned int		delta;// del
+	// unsigned int		new_pc;
+
+	// ft_printf("\n");
+	// delta = arg[1] + arg[2];
+	// new_pc = (proc->pc + delta) % IDX_MOD;
+	// ft_printf("%i", new_pc); // del
+
+	if (proc->opcode == 11)
+		verb_prt_op_comm(proc, arg);
+}
+
 void		verb_print_op(t_process *proc, t_arg_type *arg_type, unsigned int *arg)
 {
 	t_op 		op;
-	int 		i;
+	// int 		i;
 
-	i = -1;
+	// i = -1;
 	op = op_tab[proc->opcode - 1];
 	if ((4 & g_game.number_v) > 0)
 	{
 		
 		ft_printf("P%5i | ", proc->num);
 		ft_printf("%s", op.op);
-		while (++i < op.arg_num)
-		{
-			ft_printf(" ");
-			if (arg_type[i] == T_REG)
-			{
-				if (op.arg[i] == T_REG)
-				{
-					ft_printf("r");
-					ft_printf("%i", arg[i]);
-				}
-				else
-					ft_printf("%i", arg_fin(proc, arg[i], arg_type[i]));
-			}
-			else
-				ft_printf("%i", arg[i]);	
-		}
+		// while (++i < op.arg_num)
+		// {
+		// 	ft_printf(" ");
+		// 	if (arg_type[i] == T_REG)
+		// 	{
+		// 		if (op.arg[i] == T_REG)
+		// 		{
+		// 			ft_printf("r");
+		// 			ft_printf("%i", arg[i]);
+		// 		}
+		// 		else
+		// 			ft_printf("%i", arg_fin(proc, arg[i], arg_type[i]));
+		// 	}
+		// 	else
+		// 		ft_printf("%i", arg[i]);	
+		// }
+		verb_prt_op_arg(proc, arg_type, arg); // norm comment
 		if (op.opcode == 9 && proc->carry == 1)
 			ft_printf(" OK");
 		else if (op.opcode == 9 && proc->carry == 0)
 			ft_printf(" FAILED");
+		if (op.opcode == 12)
+			ft_printf(" (%d)", ((arg_fin(proc, arg[0], arg_type[0]) % IDX_MOD) + proc->pc) % MEM_SIZE);
+		if (op.opcode == 15)
+			ft_printf(" (%d)", (arg_fin(proc, arg[0], arg_type[0]) + proc->pc) % MEM_SIZE);
 		ft_printf("\n");
-		//sti!!!
 	}
 	if ((1 & g_game.number_v) > 0 && proc->opcode == 1)
 		verb_print_lives((int)(*arg));
@@ -85,7 +140,6 @@ void		verb_print_op(t_process *proc, t_arg_type *arg_type, unsigned int *arg)
 
 void		verb_print_death(int proc_num, int cycles_not_live)
 {
-//	ft_printf("3 SEGFOLT?\n");
 	if ((8 & g_game.number_v) > 0)
 	{
 		ft_printf("Process %i ", proc_num);
@@ -93,7 +147,6 @@ void		verb_print_death(int proc_num, int cycles_not_live)
 		if ((g_verb.ctd_change))
 			ft_printf("(CTD %i)\n", g_game.ctd);
 	}
-	//	ft_printf("Process %i hasn't lived for %i cycles (CTD %i)\n", op->proc_num, death->cycles_not_live, g_verb.ctd);
 }
 
 void		verb_print_pc(int pc_prev, int pc_new, int move, unsigned char *board)
@@ -110,21 +163,4 @@ void		verb_print_pc(int pc_prev, int pc_new, int move, unsigned char *board)
 			ft_printf("%.2x ", board[(pc_prev + i) % MEM_SIZE]);
 		ft_printf("\n");
 	}
-
-//	ft_printf("2 SEGFOLT?\n");
-	// t_list_pc	*pc;
-	// int 		i;
-
-	// i = -1;
-	// pc = g_verb.pc;
-	// if (g_verb.pc)
-	// {
-	// 	ft_printf("ADV %i ", pc->move);
-	// 	pc->pc_prev == 0 ? ft_printf("(0x0000 -> "): ft_printf("(%#.4x -> ", pc->pc_prev);
-	// 	pc->pc_new == 0 ? ft_printf("0x0000)") : ft_printf("%#.4x)", pc->pc_new);
-	// 	while (++i < pc->move)
-	// 		ft_printf(" %.2x", pc->line[i]);
-	// 	ft_printf("\n");
-	// }
-//	ft_printf("%s %i (%#.4x -> %#.4x) %s\n","ADV", pc->move, pc->pc_prev, pc->pc_new, pc->line);
 }

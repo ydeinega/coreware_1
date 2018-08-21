@@ -14,18 +14,18 @@ static int				get_length(t_arg_type arg_type, t_op op)
 	return (length);
 }
 
-static unsigned int		get_arg(t_op op, t_arg_type arg_type, unsigned int res, int pc)
-{
-	if (pc < 0)
-		return (0);
-	if (arg_type == T_REG)
-		res = (unsigned int)((unsigned char)res);
-	else if (arg_type == T_DIR && op.label == 2)
-		res = (unsigned int)((short)res);
-	//else if (arg_type == T_IND)
-	//	res = extract_ind(pc, res);
-	return (res);
-}
+// static unsigned int		get_arg(t_op op, t_arg_type arg_type, unsigned int res, int pc)
+// {
+// 	if (pc < 0)
+// 		return (0);
+// 	if (arg_type == T_REG)
+// 		res = (unsigned int)((unsigned char)res);
+// 	else if (arg_type == T_DIR && op.label == 2)
+// 		res = (unsigned int)((short)res);
+// 	else if (arg_type == T_IND)
+// 		res = (unsigned int)((short)res);
+// 	return (res);
+// }
 
 unsigned int			*extract_arg(t_op op, int pc, t_arg_type *arg_type)//ПРИ СЧИТЫВАНИИ АРГУМЕНТЫ НУЖНО КАСТИТЬ!
 {
@@ -45,10 +45,11 @@ unsigned int			*extract_arg(t_op op, int pc, t_arg_type *arg_type)//ПРИ СЧ�
 	{
 		length = arg_type ? get_length(arg_type[i], op) : op.label;
 		line = extract_line(pc, length);//под вопросом
-		if (arg_type)
-			arg[i] = get_arg(op, arg_type[i], conv_hex(line, length), pc_copy);
-		else
-			arg[i] = get_arg(op, op.arg[0], conv_hex(line, length), pc_copy);
+		arg[i] = conv_hex(line, length);
+		// if (arg_type)
+		// 	arg[i] = get_arg(op, arg_type[i], conv_hex(line, length), pc_copy);
+		// else
+		// 	arg[i] = get_arg(op, op.arg[0], conv_hex(line, length), pc_copy);
 		free(line);
 		i++;
 		pc = (pc + length) % MEM_SIZE;//???
@@ -91,10 +92,29 @@ unsigned int			extract_ind(int pc, int delta, int base)//BASE???
 	return (res);		
 }
 
+// unsigned int			extract_ind(int pc, int delta, int base)//BASE???
+// {
+// 	unsigned char	*line;
+// 	unsigned int	res;
+// 	int				pc_new;
+
+// 	line = NULL;
+// 	res = 0;
+// 	pc_new = 0;
+// 	if (base)
+// 		pc_new = (pc + (delta % base)) % MEM_SIZE;
+// 	else
+// 		pc_new = (pc + delta) % MEM_SIZE;
+// 	line = extract_line(pc, 4);
+// 	res = conv_hex(line, 4);
+// 	free(line);
+// 	return (res);		
+// }
+
 unsigned int			arg_fin(t_process *process, unsigned int arg, t_arg_type arg_type)
 {
-	int		res;
-	int		base;
+	unsigned int	res;
+	unsigned int	base;
 
 	res = 0;
 	base = IDX_MOD;
